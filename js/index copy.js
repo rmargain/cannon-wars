@@ -5,15 +5,15 @@ canvas.height = 600 //window.innerHeight;
 let activePlayer = 1;
 
 // 1. Instancia de fondo
-let img = new Image();
-img.src = "./images/background.jpg";
-img.alt = "href='https://www.freepik.com/vectors/background'>Background vector created by macrovector - www.freepik.com"
-let backgroundImage = {
-  img: img,
-  draw: function() {
-    ctx.drawImage(this.img,0,0, canvas.width, canvas.height);
-}
-};
+// let img = new Image();
+// img.src = "./images/background.jpg";
+// img.alt = "href='https://www.freepik.com/vectors/background'>Background vector created by macrovector - www.freepik.com"
+// let backgroundImage = {
+//   img: img,
+//   draw: function() {
+//     ctx.drawImage(this.img,0,0, canvas.width, canvas.height);
+// }
+// };
 
 // Left Cannon along with methods to move and aim
 let cannonImage1 = new Image();
@@ -35,10 +35,10 @@ let cannon1 = {
 
     //
     aimUp: function() {
-      this.launchAngle += 1*Math.PI/180;
+      this.launchAngle += 1;
   },
     aimDown: function() {
-        this.launchAngle -= 1*Math.PI/180;
+        this.launchAngle -= 1;
   },
     moveRight: function() {
       this.x += this.speed;
@@ -51,7 +51,7 @@ let cannon1 = {
     draw: function () {
         ctx.save();
         ctx.translate(this.x + 30, canvas.height-160+24);
-        ctx.rotate(-this.launchAngle);
+        ctx.rotate(-this.launchAngle*.017);
         ctx.drawImage(this.img, -30, -(24), 63, 48);
         //ctx.drawImage(this.ball, -10, -10, 20, 20);
         ctx.restore();
@@ -84,10 +84,10 @@ let cannon2 = {
 
     //
     aimUp: function() {
-      this.launchAngle += 1*Math.PI/180;
+      this.launchAngle += 1;
   },
     aimDown: function() {
-        this.launchAngle -= 1*Math.PI/180;
+        this.launchAngle -= 1;
   },
     moveRight: function() {
       this.x += this.speed;
@@ -100,7 +100,7 @@ let cannon2 = {
     draw: function () {
         ctx.save();
         ctx.translate(this.x - 30, canvas.height-160+24);
-        ctx.rotate(this.launchAngle);
+        ctx.rotate(this.launchAngle*.017);
         ctx.drawImage(this.ball, -10, -10, 20, 20);
         ctx.drawImage(this.img, -30, -(24), 63, 48);
         ctx.restore();
@@ -115,20 +115,21 @@ let cannon2 = {
 }
 
 // Left Shot
-let initialSpeed = 2;
-let gravity = -15;
-
 let leftShot = {
+    gravity: 0,
+    initialSpeed: 1,
+    initialSpeedX: this.initialSpeed * Math.cos(-cannon1.launchAngle + 15*Math.PI/180),
+    initialSpeedY: this.initialSpeed * Math.sin(-cannon1.launchAngle + 15*Math.PI/180),
+    flightTime: this.initialSpeedY/this.gravity,
     x: cannon1.x +20,
     y: canvas.height -156,
-    flightTime: initialSpeed/gravity,
     ball: cannonBall1,
     move: function(){
-        this.x += initialSpeed * Math.cos(cannon1.launchAngle + 15*Math.PI/180);
-        this.y += -initialSpeed * Math.sin(cannon1.launchAngle + 15*Math.PI/180) * this.flightTime + gravity/2 * this.flightTime * this.flightTime;
+        this.x += this.initialSpeedX;
+        this.y -= this.initialSpeedY + this.gravity;
     },
     draw: function(){
-        ctx.drawImage(this.ball, this.x, this.y, 20, 20);
+        ctx.drawImage(this.ball, this.x, this.y, 40, 40);
     }
 }
 
@@ -192,8 +193,6 @@ document.addEventListener('keyup', e =>{
   }
 });
 
-
-
 // document.onkeydown = function(event) {
 //   event.preventDefault();
 //   switch (event.keyCode) {
@@ -234,20 +233,28 @@ const updateCanvas = () => {
 //   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
- backgroundImage.draw();
-  if(launcher){
-    leftShot.move();
-}      
+  backgroundImage.draw();
+        
   
           
           
           //console.log('a');
-          console.log(cannon1.launchAngle)
-          leftShot.draw();
+          console.log(leftShot.x);
+          console.log(leftShot.initialSpeed * Math.sin(-cannon1.launchAngle + 15*Math.PI/180))
+ if(launcher){
+    leftShot.move();
+}
         cannon1.draw();
         cannon2.draw();
+        leftShot.draw();
         
+  
+//   player.draw();
+//   obstacles.draw();
 
   requestAnimationFrame(updateCanvas);
 }
 
+// class Cannon {
+//     constructor()
+// }
