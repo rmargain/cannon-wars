@@ -20,12 +20,27 @@ let measureForce = () =>{
 let img = new Image();
 img.src = "./images/background.jpg";
 img.alt = "href='https://www.freepik.com/vectors/background'>Background vector created by macrovector - www.freepik.com"
+let meter = new Image();
+meter.src = './images/speed.png'
 let backgroundImage = {
   img: img,
+  speedMeter: meter,
   draw: function() {
     ctx.drawImage(this.img,0,0, canvas.width, canvas.height);
+    ctx.drawImage(meter, 500, canvas.height - 125, 200, 100);
 }
 };
+// dibujar fuerza
+let drawMeter = () =>{
+    ctx.beginPath()
+    ctx.arc(canvas.width/2, canvas.height-25, 88, Math.PI, Math.PI + Math.PI * cannon1.force/30);
+    ctx.lineTo(canvas.width/2, canvas.height-25)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.61)'
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.61)'
+    //ctx.lineWidth = 20
+    ctx.stroke()
+    ctx.fill()
+}
 
 // Explosion for collision
 let cannonExplosion = new Image();
@@ -62,7 +77,7 @@ let cannon1 = {
     initialSpeed: 1,
     force: 0,
     gravity: .005,
-    livesLeft:1,
+    livesLeft:3,
     collision: false,
     //
     aimUp: function() {
@@ -121,6 +136,9 @@ let cannon1 = {
             ctx.drawImage(this.fullCannon, 10, 10, 48, 32);
             break;
     }
+    // ctx.beginPath()
+    // ctx.arc(canvas.width/2, canvas.height-25, 200, 0, Math.PI * cannon1.force/30)
+    // ctx.stroke()
     },
 
     collide: function(){
@@ -182,7 +200,7 @@ let cannon2 = {
     initialSpeed: 1,
     force: 0,
     gravity: .005,
-    livesLeft: 1,
+    livesLeft: 3,
     collision: false,
     //
     aimUp: function() {
@@ -305,7 +323,8 @@ let count = 0;
 document.addEventListener('keydown', e =>{
     switch (e.keyCode) {
     case 32:
-      measureForce();  
+      measureForce(); 
+      drawMeter(); 
       launcher = false;
       //console.log('launcher false')
       break;
@@ -328,6 +347,7 @@ document.addEventListener('keyup', e =>{
 const updateCanvas = () => {
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 backgroundImage.draw();
+drawMeter();
 cannon1.draw();
 cannon2.draw();
 console.log(cannon1.force)
