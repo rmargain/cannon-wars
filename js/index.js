@@ -30,6 +30,10 @@ let backgroundImage = {
 // Explosion for collision
 let cannonExplosion = new Image();
 cannonExplosion.src = './images/explosion.png';
+let player1Wins = new Image();
+player1Wins.src = './images/player1wins.png';
+let player2Wins = new Image();
+player2Wins.src = './images/player2wins.png';
 
 // Left Cannon along with methods to move and aim
 let cannonImage1 = new Image();
@@ -58,7 +62,7 @@ let cannon1 = {
     initialSpeed: 1,
     force: 0,
     gravity: .005,
-    livesLeft:3,
+    livesLeft:1,
     collision: false,
     //
     aimUp: function() {
@@ -84,7 +88,6 @@ let cannon1 = {
     } 
     },
 
-  //
     draw: function () {
         if(cannon2.collision===false){
         if(this.collision === false){
@@ -102,7 +105,7 @@ let cannon1 = {
         ctx.drawImage(this.wheel,-12, -12, 24, 24);
         ctx.restore();
     } else {
-        ctx.drawImage(this.explosion, cannon2.ballX, cannon2.ballY, -100, 100)
+        ctx.drawImage(this.explosion, cannon2.ballX, cannon2.ballY, 100, 100)
     }
     switch(this.livesLeft){
         case 3:
@@ -127,7 +130,6 @@ let cannon1 = {
                 this.collision = true;
                 cannon2.livesLeft -=1;
             }
-
         },
     
     resume: function(){
@@ -144,7 +146,8 @@ let cannon1 = {
     },
 
     isDead: function() {
-        return(this.livesLeft === 0)
+        return (this.livesLeft === 0)
+        
     }
 
     
@@ -179,7 +182,7 @@ let cannon2 = {
     initialSpeed: 1,
     force: 0,
     gravity: .005,
-    livesLeft: 3,
+    livesLeft: 1,
     collision: false,
     //
     aimUp: function() {
@@ -198,7 +201,6 @@ let cannon2 = {
     },
     shoot: function(){
     if( this.collision === false || this.ballY > canvas.height -140){
-        //this.flightTime ++;
         this.ballY += -(this.initialSpeed + 1.5/30 * this.force) * Math.sin(this.launchAngle + 15*Math.PI/180) + this.gravity/2 * this.flightTime;
         this.ballX -= (this.initialSpeed + 1.5/30 * this.force) * Math.cos(this.launchAngle + 15*Math.PI/180);
     } 
@@ -260,6 +262,11 @@ let cannon2 = {
         cannon1.force = 0;
         //this.flightTime = 0;
         launcher = undefined;
+    },
+
+    isDead: function() {
+    return (this.livesLeft === 0)
+        
     }
 }
 
@@ -327,35 +334,49 @@ console.log(cannon1.force)
 
 
   
-
-if( activePlayer === 1 && launcher){
-    if(cannon1.ballY > canvas.height-140 || cannon1.collision === true){
-        launcher = false;
-        setTimeout(function(){
-        cannon1.resume();
-        cannon2.draw();
-        cannon1.flightTime = 0;
-        }, 3000)
-    return true;   
+if(cannon1.isDead()){
+    ctx.drawImage(player2Wins, 400, 100, 400, 400)
+    setTimeout( function(){
+        location.reload();
+    }, 7000)}
+    else {
+        if( activePlayer === 1 && launcher){
+        if(cannon1.ballY > canvas.height-140 || cannon1.collision === true || cannon1.ballX +20 > canvas.width){
+            launcher = false;
+            setTimeout(function(){
+            cannon1.resume();
+            cannon2.draw();
+            cannon1.flightTime = 0;
+            }, 3000)
+        return true;   
+        }
+        cannon1.shoot();
+        cannon1.collide();
+        cannon1.flightTime ++;
+        }
     }
-    cannon1.shoot();
-    cannon1.collide();
-    cannon1.flightTime ++;
-}
-
-if(activePlayer === 2 && launcher){
-    if(cannon2.ballY > canvas.height-140 || cannon2.collision === true){
-        launcher = false;
-        setTimeout(function() {
-        cannon2.resume();
-        cannon1.draw();
-        cannon2.flightTime = 0;
-        }, 3000)
-        return true; 
+    
+    
+if(cannon2.isDead()){
+    ctx.drawImage(player1Wins, 400, 100, 400, 400)
+    setTimeout( function(){
+        location.reload();
+    }, 7000)}
+    else {
+    if(activePlayer === 2 && launcher){
+        if(cannon2.ballY > canvas.height-140 || cannon2.collision === true || cannon2.ballX < 0){
+            launcher = false;
+            setTimeout(function() {
+            cannon2.resume();
+            cannon1.draw();
+            cannon2.flightTime = 0;
+            }, 3000)
+            return true; 
+        }
+        cannon2.shoot();
+        cannon2.collide();
+        cannon2.flightTime ++;
     }
-    cannon2.shoot();
-    cannon2.collide();
-    cannon2.flightTime ++;
 }
   requestAnimationFrame(updateCanvas);
 }
