@@ -15,6 +15,10 @@ let backgroundImage = {
 }
 };
 
+// Explosion for collision
+let cannonExplosion = new Image();
+cannonExplosion.src = './images/explosion.png';
+
 // Left Cannon along with methods to move and aim
 let cannonImage1 = new Image();
 let cannonBase1 = new Image();
@@ -29,14 +33,17 @@ let cannon1 = {
     base: cannonBase1,
     wheel: cannonWheel1,
     ball: cannonBall1,
+    explosion: cannonExplosion,
     launchAngle: 15*Math.PI/180,
     x: 50,
     speed: 2,
     flightTime: 0,
-    ballX1: 70,
-    ballY1: canvas.height - 146,
-    initialSpeed: 1.4,
+    ballX: 70,
+    ballY: canvas.height - 146,
+    initialSpeed: 1.75,
     gravity: .005,
+    livesLeft:3,
+    collision: false,
     //
     aimUp: function() {
       this.launchAngle += 1*Math.PI/180;
@@ -46,30 +53,31 @@ let cannon1 = {
   },
     moveRight: function() {
       this.x += this.speed;
-      this.ballX1 += this.speed;
+      this.ballX += this.speed;
   },
     moveLeft: function () {
         this.x -= this.speed;
-        this.ballX1 -= this.speed;
+        this.ballX -= this.speed;
     },
 
     shoot: function(){
-    this.flightTime ++;
-    this.ballY1 += -this.initialSpeed * Math.sin(this.launchAngle + 15*Math.PI/180) + this.gravity/2 * this.flightTime;
-    this.ballX1 += this.initialSpeed * Math.cos(this.launchAngle + 15*Math.PI/180);
-    console.log(`tiempo es ${this.flightTime}`);
-    //ctx.drawImage(this.ball, this.ballX1, this.ballY1, 20, 20);
-    //requestAnimationFrame(cannon1.shoot());
+    if(this.collision === false || this.ballY > canvas.height-140){
+        //this.flightTime ++;
+        this.ballY += -this.initialSpeed * Math.sin(this.launchAngle + 15*Math.PI/180) + this.gravity/2 * this.flightTime;
+        this.ballX += this.initialSpeed * Math.cos(this.launchAngle + 15*Math.PI/180);
+    } 
     },
 
   //
     draw: function () {
-        ctx.drawImage(this.ball, this.ballX1, this.ballY1, 20, 20);
+        if(cannon2.collision===false){
+        if(this.collision === false){
+            ctx.drawImage(this.ball, this.ballX, this.ballY, 20, 20);
+        }
         ctx.save();
         ctx.translate(this.x + 30, canvas.height-160+24);
         ctx.rotate(-this.launchAngle+15*Math.PI/180);
         ctx.drawImage(this.img, -30, -(24), 63, 48);
-        //ctx.drawImage(this.ball, -10, -10, 20, 20);
         ctx.restore();
         ctx.drawImage(this.base, this.x - 30, canvas.height-140, 80, 38);
         ctx.save();
@@ -77,27 +85,66 @@ let cannon1 = {
         ctx.rotate(this.x*6 * 0.017);
         ctx.drawImage(this.wheel,-12, -12, 24, 24);
         ctx.restore();
+    } else {
+        ctx.drawImage(this.explosion, cannon2.ballX, cannon2.ballY, -100, 100)
+    }
+    // ctx.beginPath()
+    //     ctx.moveTo(this.x, 0)
+    //     ctx.lineTo(this.x, canvas.width)
+    //     ctx.stroke() 
     },
+
+    collide: function(){
+        if(this.ballX +20 > cannon2.x - 63 &&
+            this.ballX +20 < cannon2.x &&
+            this.ballY +20 >= canvas.height - 160){
+                this.collision = true;
+                cannon1.livesLeft -=1;
+            }
+
+        },
+    
+    resume: function(){
+        this.collision = false;
+        activePlayer = 2;
+        this.ballX = this.x + 30;
+        this.ballY = canvas.height - 146;
+        this.initialSpeed = 1.75;
+        //this.flightTime = 0;
+        launcher = undefined;
+    }
+    
 }
+
+
 
 // Right Cannon along with methods to move and aim
 let cannonImage2 = new Image();
 let cannonBase2 = new Image();
 let cannonWheel2 = new Image();
 let cannonBall2 = new Image();
+
 cannonImage2.src = './images/facing-left/body-black.png';
 cannonBase2.src = './images/facing-left/body-bordered.png';
 cannonWheel2.src = './images/facing-left/wheel-bordered.png';
 cannonBall2.src = './images/facing-left/cannon-ball-bordered.png';
+
 let cannon2 = {
     img: cannonImage2,
     base: cannonBase2,
     wheel: cannonWheel2,
     ball: cannonBall2,
-    launchAngle: 0,
+    explosion: cannonExplosion,
+    launchAngle: 15*Math.PI/180,
     x: canvas.width - 50,
     speed: 2,
-
+    flightTime: 0,
+    ballX: canvas.width - 80,
+    ballY: canvas.height - 146,
+    initialSpeed: 1.75,
+    gravity: .005,
+    livesLeft: 3,
+    collision: false,
     //
     aimUp: function() {
       this.launchAngle += 1*Math.PI/180;
@@ -106,18 +153,29 @@ let cannon2 = {
         this.launchAngle -= 1*Math.PI/180;
   },
     moveRight: function() {
-      this.x += this.speed;
+         this.x += this.speed;
+         this.ballX += this.speed;
   },
     moveLeft: function () {
         this.x -= this.speed;
+        this.ballX -= this.speed;
+    },
+    shoot: function(){
+    if( this.collision === false || this.ballY > canvas.height -140){
+        //this.flightTime ++;
+        this.ballY += -this.initialSpeed * Math.sin(this.launchAngle + 15*Math.PI/180) + this.gravity/2 * this.flightTime;
+        this.ballX -= this.initialSpeed * Math.cos(this.launchAngle + 15*Math.PI/180);
+    } 
     },
 
-  //
     draw: function () {
+        if(cannon1.collision===false){
+            if(this.collision === false){
+                ctx.drawImage(this.ball, this.ballX, this.ballY, 20, 20);
+            }
         ctx.save();
         ctx.translate(this.x - 30, canvas.height-160+24);
-        ctx.rotate(this.launchAngle);
-        ctx.drawImage(this.ball, -10, -10, 20, 20);
+        ctx.rotate(this.launchAngle-15*Math.PI/180);
         ctx.drawImage(this.img, -30, -(24), 63, 48);
         ctx.restore();
         ctx.drawImage(this.base, this.x - 50, canvas.height-140, 80, 38);
@@ -126,15 +184,40 @@ let cannon2 = {
         ctx.rotate(this.x*6 * 0.017);
         ctx.drawImage(this.wheel,-12, -12, 24, 24);
         ctx.restore();
-        
+        } else {
+        ctx.drawImage(this.explosion,cannon1.ballX, cannon1.ballY, 100, 100)   
+        }
+        // ctx.beginPath()
+        // ctx.moveTo(this.x, 0)
+        // ctx.lineTo(this.x, canvas.width)
+        // ctx.stroke()  
+        // ctx.beginPath()
+        // ctx.moveTo(this.x - 63, 0)
+        // ctx.lineTo(this.x - 63, canvas.width)
+        // ctx.stroke()       
     },
+
+    collide: function(){
+    if(this.ballX < cannon1.x + 63 &&
+        this.ballX > cannon1.x &&
+        this.ballY+20 >= canvas.height - 160){
+            this.collision = true;
+            cannon1.livesLeft -= 1;
+        }
+    },
+    
+    resume: function(){
+        this.collision = false;
+        activePlayer = 1;
+        this.ballX = this.x - 30;
+        this.ballY = canvas.height - 146;
+        this.initialSpeed = 1.75;
+        //this.flightTime = 0;
+        launcher = undefined;
+    }
 }
 
-
-
-
-
-
+console.log(cannon2.x)
 
 //Botón de iniciar juego
 window.onload = function() {
@@ -142,6 +225,7 @@ window.onload = function() {
     updateCanvas()
   };
 };
+
 
 //moviemientos
 document.addEventListener('keydown', e => {
@@ -160,20 +244,19 @@ document.addEventListener('keydown', e => {
     case 40: cannon2.aimDown(); break;
   }
 }
-  //updateCanvas();
 });
 
-let measureForce = {
-    i:0,
-    increaseForce: function(){
-        if(this.i<1600){
-            this.i += 80;
-        } else {
-            this.i = 1600;
-        } 
-        return this.i;
-    }
-}
+// let measureForce = {
+//     i:0,
+//     increaseForce: function(){
+//         if(this.i<1600){
+//             this.i += 80;
+//         } else {
+//             this.i = 1600;
+//         } 
+//         return this.i;
+//     }
+// }
 
 let launcher;
 
@@ -189,7 +272,7 @@ document.addEventListener('keydown', e =>{
 
 document.addEventListener('keyup', e =>{
     switch (e.keyCode) {
-    case 32:  
+    case 32: 
       launcher = true;
       console.log('launcher true')
       break;
@@ -198,45 +281,92 @@ document.addEventListener('keyup', e =>{
 
 
 
-// document.onkeydown = function(event) {
-//   event.preventDefault();
-//   switch (event.keyCode) {
-//     case 32:
-//       measureForce.increaseForce();  
-//       launcher = true;
-//       break;
-//   }
-// };
-
-// document.onkeyup = function(event) {
-//   switch (event.keyCode) {
-//     case 32:
-//       launcher = false;
-//       break;
-//   }
-// };
-
-
-
 
 // 8. Nuestra actualizacion de canvas.
 const updateCanvas = () => {
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+backgroundImage.draw();
+cannon1.draw();
+cannon2.draw();
 
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
- backgroundImage.draw();
- 
-        cannon1.draw();
+  
+
+if( activePlayer === 1 && launcher){
+    if(cannon1.ballY > canvas.height-140 || cannon1.collision === true){
+        launcher = false;
+        setTimeout(function(){
+        console.log(`ball1X: ${cannon1.ballX}`)
+    console.log(`ball1Y: ${cannon1.ballY}`)
+        cannon1.resume();
         cannon2.draw();
-         if(launcher){
-             if(cannon1.ballY1 > canvas.height){
-                 launcher = false;
-             }
+        cannon1.flightTime = 0;
+    console.log(`active placer: ${activePlayer}`)
+    
+    console.log(launcher)
+    console.log(`cannon1 collision: ${cannon1.collision}`)
+    console.log(`cannon2 collision: ${cannon2.collision}`)
+    console.log(`cannon1 Lives: ${cannon1.livesLeft}`)
+    console.log(`cannon2 Lives: ${cannon2.livesLeft}`)
+    console.log(cannon1.flightTime)
+    console.log(cannon2.flightTime)
+        }, 3000)
+            
+        //location.reload();
+        //activePlayer=2;
+    console.log(`active placer: ${activePlayer}`)
+    console.log(`ball1X: ${cannon1.ballX}`)
+    console.log(`ball1Y: ${cannon1.ballY}`)
+    console.log(launcher)
+    console.log(`cannon1 collision: ${cannon1.collision}`)
+    console.log(`cannon2 collision: ${cannon2.collision}`)
+    console.log(`cannon1 Lives: ${cannon1.livesLeft}`)
+    console.log(`cannon2 Lives: ${cannon2.livesLeft}`)
+    console.log(cannon1.flightTime)
+    console.log(cannon2.flightTime)
+    return true;   
+    }
     cannon1.shoot();
-    console.log('el texto que tu quieras')
-}      
-        
+    cannon1.collide();
+    cannon1.flightTime ++;
+}
 
+if(activePlayer === 2 && launcher){
+    if(cannon2.ballY > canvas.height-140 || cannon2.collision === true){
+        launcher = false;
+        setTimeout(function() {
+        cannon2.resume();
+        cannon1.draw();
+        cannon2.flightTime = 0;
+        console.log(`active placer: ${activePlayer}`)
+        console.log(`ball2X: ${cannon2.ballX}`)
+        console.log(`ball2Y: ${cannon2.ballY}`)
+        console.log(launcher)
+        console.log(`cannon1 collision: ${cannon1.collision}`)
+        console.log(`cannon2 collision: ${cannon2.collision}`)
+        console.log(`cannon1 Lives: ${cannon1.livesLeft}`)
+        console.log(`cannon2 Lives: ${cannon2.livesLeft}`)
+        console.log(cannon1.flightTime)
+        console.log(cannon2.flightTime)
+        }, 3000)
+        return true; 
+    }
+    console.log(`active placer: ${activePlayer}`)
+    console.log(`ball1X: ${cannon2.ballX}`)
+    console.log(`ball1Y: ${cannon2.ballY}`)
+    console.log(launcher)
+    console.log(`cannon1 collision: ${cannon1.collision}`)
+    console.log(`cannon2 collision: ${cannon2.collision}`)
+    console.log(`cannon1 Lives: ${cannon1.livesLeft}`)
+    console.log(`cannon2 Lives: ${cannon2.livesLeft}`)
+    console.log(cannon1.flightTime)
+    console.log(cannon2.flightTime)
+    cannon2.shoot();
+    cannon2.collide();
+    cannon2.flightTime ++;
+}
+    console.log(cannon1.flightTime)
+    console.log(cannon2.flightTime) 
   requestAnimationFrame(updateCanvas);
 }
 
