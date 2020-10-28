@@ -15,6 +15,15 @@ let measureForce = () =>{
         } 
 }
 
+// cargar audios
+let cannonBlast = new Audio('./sounds/Cannon+5.wav');
+let cannonBlastTimes = 1;
+let explosionSound = new Audio('./sounds/Explosion+7.wav')
+let explosionSoundTimes = 1;
+let missSound = new Audio('./sounds/miss.wav')
+let missSoundTimes = 1;
+
+
 
 // 1. Instancia de fondo
 let img = new Image();
@@ -74,9 +83,9 @@ let cannon1 = {
     flightTime: 0,
     ballX: 70,
     ballY: canvas.height - 146,
-    initialSpeed: 1,
+    initialSpeed: 0.8,
     force: 0,
-    gravity: .005,
+    gravity: .008,
     livesLeft:3,
     collision: false,
     //
@@ -160,6 +169,9 @@ let cannon1 = {
         this.initialSpeed = 1;
         //this.flightTime = 0;
         launcher = undefined;
+        cannonBlastTimes = 1;
+        explosionSoundTimes = 1;
+        missSoundTimes = 1;
         
     },
 
@@ -197,9 +209,9 @@ let cannon2 = {
     flightTime: 0,
     ballX: canvas.width - 80,
     ballY: canvas.height - 146,
-    initialSpeed: 1,
+    initialSpeed: 0.8,
     force: 0,
-    gravity: .005,
+    gravity: .008,
     livesLeft: 3,
     collision: false,
     //
@@ -280,6 +292,9 @@ let cannon2 = {
         cannon1.force = 0;
         //this.flightTime = 0;
         launcher = undefined;
+        cannonBlastTimes = 1;
+        explosionSoundTimes = 1;
+        missSoundTimes =1;
     },
 
     isDead: function() {
@@ -361,6 +376,18 @@ if(cannon1.isDead()){
     }, 7000)}
     else {
         if( activePlayer === 1 && launcher){
+            if(cannon1.collision === true){
+                if(explosionSoundTimes === 1){
+                    explosionSound.play();
+                    explosionSoundTimes ++
+                }
+            }
+            if(cannon1.ballY > canvas.height-140){
+                if(missSoundTimes === 1){
+                    missSound.play();
+                    missSoundTimes ++
+                }
+            }
         if(cannon1.ballY > canvas.height-140 || cannon1.collision === true || cannon1.ballX +20 > canvas.width){
             launcher = false;
             setTimeout(function(){
@@ -371,6 +398,10 @@ if(cannon1.isDead()){
         return true;   
         }
         cannon1.shoot();
+        if(cannonBlastTimes === 1){
+          cannonBlast.play();
+          cannonBlastTimes ++  
+        }
         cannon1.collide();
         cannon1.flightTime ++;
         }
@@ -384,6 +415,18 @@ if(cannon2.isDead()){
     }, 7000)}
     else {
     if(activePlayer === 2 && launcher){
+        if(cannon2.collision === true){
+                if(explosionSoundTimes === 1){
+                    explosionSound.play();
+                    explosionSoundTimes ++
+                }
+            }
+        if(cannon2.ballY > canvas.height-140){
+                if(missSoundTimes === 1){
+                    missSound.play();
+                    missSoundTimes ++
+                }
+            }
         if(cannon2.ballY > canvas.height-140 || cannon2.collision === true || cannon2.ballX < 0){
             launcher = false;
             setTimeout(function() {
@@ -394,6 +437,10 @@ if(cannon2.isDead()){
             return true; 
         }
         cannon2.shoot();
+        if(cannonBlastTimes === 1){
+          cannonBlast.play();
+          cannonBlastTimes ++  
+        }
         cannon2.collide();
         cannon2.flightTime ++;
     }
