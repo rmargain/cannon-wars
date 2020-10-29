@@ -9,26 +9,14 @@ body h1 {
     text-transform: uppercase;
 }
 
-.buttons{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 40px;
-    
-}
-
-a {
-    font-style: none;
-    color: white;
-    text-decoration: none;
-}
-
 body button {
     font-size: 20px;
     background-color: rgb(61, 133, 192);
     color: #fff;
     padding: 10px 20px;
     border: 2;
+    box-shadow: 0;
     border-radius: 50px;
-    margin: 20px;
+    margin-bottom: 20px;
 }
+

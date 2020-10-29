@@ -83,9 +83,9 @@ let cannon1 = {
     flightTime: 0,
     ballX: 70,
     ballY: canvas.height - 146,
-    initialSpeed: 0.8,
+    initialSpeed: 1,
     force: 0,
-    gravity: .008,
+    gravity: .005,
     livesLeft:3,
     collision: false,
     //
@@ -129,7 +129,7 @@ let cannon1 = {
         ctx.drawImage(this.wheel,-12, -12, 24, 24);
         ctx.restore();
     } else {
-        ctx.drawImage(this.explosion, cannon2.ballX, cannon2.ballY, 100, 100)
+        ctx.drawImage(this.explosion, cannon2.ballX-100, cannon2.ballY-20, 100, 100)
     }
     switch(this.livesLeft){
         case 3:
@@ -145,9 +145,6 @@ let cannon1 = {
             ctx.drawImage(this.fullCannon, 10, 10, 48, 32);
             break;
     }
-    // ctx.beginPath()
-    // ctx.arc(canvas.width/2, canvas.height-25, 200, 0, Math.PI * cannon1.force/30)
-    // ctx.stroke()
     },
 
     collide: function(){
@@ -167,7 +164,6 @@ let cannon1 = {
         this.force = 0;
         cannon2.force = 0;
         this.initialSpeed = 1;
-        //this.flightTime = 0;
         launcher = undefined;
         cannonBlastTimes = 1;
         explosionSoundTimes = 1;
@@ -209,9 +205,9 @@ let cannon2 = {
     flightTime: 0,
     ballX: canvas.width - 80,
     ballY: canvas.height - 146,
-    initialSpeed: 0.8,
+    initialSpeed: 1,
     force: 0,
-    gravity: .008,
+    gravity: .005,
     livesLeft: 3,
     collision: false,
     //
@@ -253,7 +249,7 @@ let cannon2 = {
         ctx.drawImage(this.wheel,-12, -12, 24, 24);
         ctx.restore();
         } else {
-        ctx.drawImage(this.explosion,cannon1.ballX, cannon1.ballY, 100, 100)   
+        ctx.drawImage(this.explosion,cannon1.ballX, cannon1.ballY-20, 100, 100)   
         }
 
         switch(this.livesLeft){
