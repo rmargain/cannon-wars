@@ -2,6 +2,9 @@ body {
     text-align: center;
     margin: 0;
     background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 body h1 {
@@ -23,9 +26,14 @@ a {
     text-decoration: none;
 }
 
+.logo{
+justify-content: center;
+margin-top: 200px
+
+}
 body button {
     font-size: 20px;
-    background-color: rgb(61, 133, 192);
+    background-color: rgb(124, 155, 176);
     color: #fff;
     padding: 10px 20px;
     border: 2;

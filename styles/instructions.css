@@ -1,0 +1,83 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+    background-color: black;
+    
+}
+
+body h1 {
+    font-size: 30px;
+    text-transform: uppercase;
+    color: white;
+}
+
+body button {
+    font-size: 20px;
+    background-color: rgb(124, 155, 176);
+    color: #fff;
+    padding: 10px 20px;
+    border: 2;
+    border-radius: 50px;
+    margin: 20px;
+}
+
+a {
+    font-style: none;
+    color: white;
+    text-decoration: none;
+}
+
+.instruction {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    color: white;
+    /* border: 1px;
+    border-color: white;
+    border-style: solid; */
+}
+
+.instructionText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: start;
+    font-size: 35px;
+    /* border: 1px;
+    border-color: white;
+    border-style: solid; */
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    /* border: 3px;
+    border-color: red;
+    border-style: solid; */
+    align-content: center;
+    width: 80%;
+    align-self: center;
+}
+
+.icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+}
+
+#cont {
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    /* border: 3px;
+    border-color: red;
+    border-style: solid; */
+    width: 50%
+}
