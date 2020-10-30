@@ -309,6 +309,7 @@ window.onload = function() {
 
 //moviemientos
 document.addEventListener('keydown', e => {
+    e.preventDefault();
   if(activePlayer === 1){
     switch(e.keyCode){
     case 37: cannon1.moveLeft(); break;
