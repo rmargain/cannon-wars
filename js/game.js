@@ -55,9 +55,9 @@ let drawMeter = () =>{
 let cannonExplosion = new Image();
 cannonExplosion.src = './images/explosion.png';
 let player1Wins = new Image();
-player1Wins.src = './images/player1wins.png';
+player1Wins.src = './images/greenwins.gif';
 let player2Wins = new Image();
-player2Wins.src = './images/player2wins.png';
+player2Wins.src = './images/blackwins.gif';
 
 // Left Cannon along with methods to move and aim
 let cannonImage1 = new Image();

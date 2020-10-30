@@ -47,11 +47,12 @@ a {
     flex-direction: column;
     justify-content: center;
     text-align: start;
-    font-size: 14px;
+    font-size: 25px;
     /* border: 1px;
     border-color: white;
     border-style: solid; */
     width: 100%;
+    margin: 10px;
 }
 
 .container {
@@ -71,6 +72,7 @@ a {
     align-items: center;
     justify-content: center;
     width: 40%;
+    margin: 10px;
 }
 
 #cont {
